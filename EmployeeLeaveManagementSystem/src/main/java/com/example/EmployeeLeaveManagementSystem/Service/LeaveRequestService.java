@@ -6,23 +6,31 @@ import com.example.EmployeeLeaveManagementSystem.DTO.LeaveResponseDTO;
 import com.example.EmployeeLeaveManagementSystem.Entity.Employee;
 import com.example.EmployeeLeaveManagementSystem.Entity.LeaveRequest;
 import com.example.EmployeeLeaveManagementSystem.Enum.LeaveStatus;
+import com.example.EmployeeLeaveManagementSystem.Enum.LeaveType;
+import com.example.EmployeeLeaveManagementSystem.Enum.Status;
 import com.example.EmployeeLeaveManagementSystem.Exception.*;
 import com.example.EmployeeLeaveManagementSystem.Repository.EmployeeRepo;
 import com.example.EmployeeLeaveManagementSystem.Repository.LeaveRequestRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class LeaveRequestService {
     private final LeaveRequestRepo leaveRequestRepo;
     private final EmployeeRepo employeeRepo;
-
+    private static final Logger log = LoggerFactory.getLogger(LeaveRequestService.class);
     public LeaveRequestService(LeaveRequestRepo leaveRequestRepo, EmployeeRepo employeeRepo) {
         this.leaveRequestRepo = leaveRequestRepo;
         this.employeeRepo = employeeRepo;
@@ -30,19 +38,41 @@ public class LeaveRequestService {
 
 
     public ResponseEntity<?> createRequest(long id,LeaveRequestDTO requestDTO){
-        LeaveRequest leaveRequest=new LeaveRequest();
+        var leaveRequest=new LeaveRequest();
 
-        Employee employee=employeeRepo.findById(id).orElseThrow(()->
+        //Validate employee exists and is active
+        var employee=employeeRepo.findById(id).orElseThrow(()->
                 new EmployeeNotFound("Employee with id: "+id+" is not found")
         );
+        if (employee.getStatus() != Status.ACTIVE) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Only active employees can apply for leave"));
+        }
         leaveRequest.setEmployee(employee);
         //Checking if the start date is before today
-        if(requestDTO.getStartDate().isBefore(LocalDate.now())){
-               throw new InvalidStartDateException("Start date cannot before the current date");
+        LocalDate today = LocalDate.now(ZoneOffset.UTC);
+        if (requestDTO.getStartDate().isBefore(today)) {
+            throw new InvalidStartDateException("Start date cannot be before current date");
         }
         //Checking if the end date is before start date
-        if(requestDTO.getEndDate().isBefore(requestDTO.getStartDate())){
-            throw new InvalidEndDateException("End date should be equal to or greater than end date");
+        if (requestDTO.getEndDate().isBefore(requestDTO.getStartDate())) {
+            throw new InvalidEndDateException("End date must be equal to or greater than start date");
+        }
+        //optional
+        long daysRequested = ChronoUnit.DAYS.between(requestDTO.getStartDate(), requestDTO.getEndDate()) + 1;
+        if (daysRequested > 30) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Leave cannot exceed 30 consecutive days"));
+        }
+        //optional
+        if (requestDTO.getLeaveType() == LeaveType.SICK) {
+            long sickDaysUsed = leaveRequestRepo.countDaysByEmployeeAndLeaveTypeAndYear(
+                    employee, LeaveType.SICK, today.getYear());
+
+            if (sickDaysUsed + daysRequested > 12) { // Assuming 12 sick days per year
+                return ResponseEntity.badRequest()
+                        .body(Map.of("error", "Sick leave limit exceeded for this year"));
+            }
         }
         long duplicateCount= leaveRequestRepo.checkDuplicate(
                 id,
@@ -53,6 +83,7 @@ public class LeaveRequestService {
         if(duplicateCount>0){
             throw new DuplicateRequestException("Duplicate leave request");
         }
+
         //checking if there is any overlapping approved leave request of that employee
         long count= leaveRequestRepo.countOverlappingApprovedLeave(
                 id,
@@ -89,11 +120,12 @@ public class LeaveRequestService {
 
     public ResponseEntity<?> updateLeaveRequestStatus(ActionDTO actionDTO){
         String email=actionDTO.getManagerEmail();
+        log.info("Updating leave request status for id: {}", actionDTO.getLeaveRequestId());
         Optional<Employee> employee=employeeRepo.findByEmail(email);
         if(employee.isPresent()){
            return ResponseEntity.badRequest().body("Employee cannot update leave request status");
         }
-        LeaveRequest leaveRequest=leaveRequestRepo.findById(actionDTO.getLeaveRequestId()).orElseThrow(
+        var leaveRequest=leaveRequestRepo.findById(actionDTO.getLeaveRequestId()).orElseThrow(
                 ()-> new LeaveRequestNotFoundException("LeaveRequest with id:"+actionDTO.getLeaveRequestId()+" not found")
         );
          if(actionDTO.getManagerEmail()==null){
@@ -114,10 +146,10 @@ public class LeaveRequestService {
     }
 
     public ResponseEntity<?> cancelLeaveRequest(String email,long leaveId){
-        Employee employee=employeeRepo.findByEmail(email).orElseThrow(
+        var employee=employeeRepo.findByEmail(email).orElseThrow(
                 ()->new EmployeeNotFound("Employee with email:"+email+" not found")
         );
-        LeaveRequest leaveRequest=leaveRequestRepo.findById(leaveId).orElseThrow(
+        var leaveRequest=leaveRequestRepo.findById(leaveId).orElseThrow(
                 ()->new LeaveRequestNotFoundException("Leave request with id:"+leaveId+" is not found")
         );
         if(employee.getEmployeeId()!=leaveRequest.getEmployee().getEmployeeId()){
@@ -132,7 +164,7 @@ public class LeaveRequestService {
     }
 
     private LeaveResponseDTO convertToDTO(LeaveRequest request){
-        LeaveResponseDTO responseDTO=new LeaveResponseDTO();
+        var responseDTO=new LeaveResponseDTO();
         responseDTO.setLeaveId(request.getId());
         responseDTO.setEmployeeId(request.getEmployee().getEmployeeId());
         responseDTO.setLeaveType(request.getLeaveType());
@@ -141,5 +173,24 @@ public class LeaveRequestService {
         responseDTO.setReason(request.getReason());
         responseDTO.setStatus(request.getStatus());
         return responseDTO;
+    }
+
+    public ResponseEntity<?> getLeaveRequestsByEmployee(long employeeId) {
+        log.info("Fetching leave requests for employee: {}", employeeId);
+
+        Employee employee = employeeRepo.findById(employeeId)
+                .orElseThrow(() -> new EmployeeNotFound("Employee not found: " + employeeId));
+
+        List<LeaveRequest> requests = leaveRequestRepo.findByEmployeeOrderByStartDateDesc(employee);
+        List<LeaveResponseDTO> response = requests.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(Map.of(
+                "employeeId", employeeId,
+                "employeeName", employee.getName(),
+                "totalRequests", response.size(),
+                "requests", response
+        ));
     }
 }

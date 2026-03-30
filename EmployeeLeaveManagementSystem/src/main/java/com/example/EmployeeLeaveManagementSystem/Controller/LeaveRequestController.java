@@ -40,4 +40,9 @@ public class LeaveRequestController {
       return leaveRequestService.cancelLeaveRequest(email, leaveId);
     }
 
+    @GetMapping("/employee/{employeeId}")
+    public ResponseEntity<?> getEmployeeLeaves(@PathVariable long employeeId) {
+        return leaveRequestService.getLeaveRequestsByEmployee(employeeId);
+    }
+
 }

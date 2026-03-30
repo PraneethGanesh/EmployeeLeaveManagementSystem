@@ -10,13 +10,25 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long employeeId;
+    @Column(nullable = false)
     private String name;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
+    @Column(nullable = false)
     private String dept;
     @Enumerated(EnumType.STRING)
     private Status status;
     private LocalDate joined_at;
+    @Column(nullable = false)
+    private String role = "EMPLOYEE";
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public long getEmployeeId() {
         return employeeId;

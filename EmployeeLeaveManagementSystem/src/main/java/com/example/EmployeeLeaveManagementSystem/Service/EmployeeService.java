@@ -1,17 +1,24 @@
 package com.example.EmployeeLeaveManagementSystem.Service;
 
+import com.example.EmployeeLeaveManagementSystem.Controller.EmployeeController;
 import com.example.EmployeeLeaveManagementSystem.DTO.EmployeeDTO;
 import com.example.EmployeeLeaveManagementSystem.Entity.Employee;
 import com.example.EmployeeLeaveManagementSystem.Enum.Status;
 import com.example.EmployeeLeaveManagementSystem.Exception.EmployeeNotFound;
 import com.example.EmployeeLeaveManagementSystem.Repository.EmployeeRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class EmployeeService {
+    private static final Logger log = LoggerFactory.getLogger(EmployeeController.class);
     private final EmployeeRepo employeeRepo;
 
     public EmployeeService(EmployeeRepo employeeRepo) {
@@ -23,7 +30,8 @@ public class EmployeeService {
     }
 
     public Employee createEmployee(EmployeeDTO employeeDTO){
-        Employee employee=new Employee();
+        log.info("Creating new employee with email: {}", employeeDTO.getEmail());
+        var employee=new Employee();
         if(employeeDTO.getName()!=null) employee.setName(employeeDTO.getName());
         if(employeeDTO.getEmail()!=null) employee.setEmail(employeeDTO.getEmail());
         if(employeeDTO.getDept()!=null) employee.setDept(employeeDTO.getDept());
@@ -31,7 +39,7 @@ public class EmployeeService {
     }
 
     public Employee updateEmployee(long id, EmployeeDTO employee){
-        Employee updateEmployee=employeeRepo.findById(id).orElseThrow(
+        var updateEmployee=employeeRepo.findById(id).orElseThrow(
                 ()->new EmployeeNotFound("Employee with id:"+id+" not found")
         );
         if(employee.getName()!=null) updateEmployee.setName(employee.getName());
@@ -41,21 +49,21 @@ public class EmployeeService {
     }
 
     public void deleteEmployee(long id){
-        Employee employee=employeeRepo.findById(id).orElseThrow(
+        var employee=employeeRepo.findById(id).orElseThrow(
                 ()->new EmployeeNotFound("Employee with id:"+id+" not found")
         );
         employeeRepo.delete(employee);
     }
 
     public ResponseEntity<String> inactivateUser(long id){
-        Employee employee=employeeRepo.findById(id).orElseThrow(
+        var employee=employeeRepo.findById(id).orElseThrow(
                 ()->new EmployeeNotFound("Employee with id:"+id+" not found")
         );
-        if(employee.getStatus()== Status.IN_ACTIVE){
+        if(employee.getStatus()== Status.INACTIVE){
             return ResponseEntity.badRequest()
                     .body("Status of the employee with id: "+id+" is already set to inactive");
         }
-        employee.setStatus(Status.IN_ACTIVE);
+        employee.setStatus(Status.INACTIVE);
         employeeRepo.save(employee);
         return ResponseEntity.ok("Status of the employee with id: "+id+" is set to inactive");
     }
