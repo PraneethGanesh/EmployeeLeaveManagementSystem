@@ -14,6 +14,7 @@ public class Employee {
     @Column(unique = true)
     private String email;
     private String dept;
+    @Enumerated(EnumType.STRING)
     private Status status;
     private LocalDate joined_at;
 

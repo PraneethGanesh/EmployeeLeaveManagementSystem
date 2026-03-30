@@ -40,6 +40,7 @@ public class EmployeeController {
         return ResponseEntity.ok("Employee with id: "+id+" is deleted");
     }
 
+    //should be done by manager
     @PutMapping("/{id}/inactive")
     public ResponseEntity<String> inactivateEmployee(@PathVariable long id){
         return employeeService.inactivateUser(id);

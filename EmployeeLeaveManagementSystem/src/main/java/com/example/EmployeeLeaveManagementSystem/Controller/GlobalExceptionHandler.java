@@ -1,6 +1,6 @@
 package com.example.EmployeeLeaveManagementSystem.Controller;
 
-import com.example.EmployeeLeaveManagementSystem.Exception.EmployeeNotFound;
+import com.example.EmployeeLeaveManagementSystem.Exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,4 +31,37 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND
         );
     }
+
+    @ExceptionHandler(InvalidStartDateException.class)
+    public ResponseEntity<Map<String,Object>> handelInvalidStartDateException(InvalidStartDateException exception, WebRequest request){
+        return new ResponseEntity<>(
+                buildError(HttpStatus.BAD_REQUEST, exception.getMessage(), request),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(InvalidEndDateException.class)
+    public ResponseEntity<Map<String,Object>> handelInvalidEndDateException(InvalidEndDateException exception, WebRequest request){
+        return new ResponseEntity<>(
+                buildError(HttpStatus.BAD_REQUEST, exception.getMessage(), request),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(OverlappingLeaveException.class)
+    public ResponseEntity<Map<String,Object>> handelOverlappingLeaveException(OverlappingLeaveException exception, WebRequest request){
+        return new ResponseEntity<>(
+                buildError(HttpStatus.BAD_REQUEST, exception.getMessage(), request),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+    @ExceptionHandler(DuplicateRequestException.class)
+    public ResponseEntity<Map<String,Object>> handelDuplicateRequestException(DuplicateRequestException exception, WebRequest request){
+        return new ResponseEntity<>(
+                buildError(HttpStatus.BAD_REQUEST, exception.getMessage(), request),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+
 }
