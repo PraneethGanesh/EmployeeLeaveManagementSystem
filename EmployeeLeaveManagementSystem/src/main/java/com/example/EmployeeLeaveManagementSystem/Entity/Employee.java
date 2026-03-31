@@ -20,18 +20,16 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private Status status;
     private LocalDate joined_at;
-<<<<<<< HEAD
-//    @Column(nullable = false)
-//    private String role = "EMPLOYEE";
-//
-//    public String getRole() {
-//        return role;
-//    }
-//
-//    public void setRole(String role) {
-//        this.role = role;
-//    }
-=======
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
     @Enumerated(EnumType.STRING)
     private Role role;
 

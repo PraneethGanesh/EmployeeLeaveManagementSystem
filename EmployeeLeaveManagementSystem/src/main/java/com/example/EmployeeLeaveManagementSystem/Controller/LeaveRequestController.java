@@ -21,7 +21,7 @@ public class LeaveRequestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<LeaveResponseDTO>> getAllLeaveRequest(){
+    public ResponseEntity<List<LeaveResponseDTO>> getAllLeaveRequest() {
         return ResponseEntity.ok(leaveRequestService.getAllTheLeaveRequest());
     }
 
@@ -31,10 +31,9 @@ public class LeaveRequestController {
     }
 
     @GetMapping("/pending/{ManagerId}")
-    public ResponseEntity<List<LeaveResponseDTO>> getAllTheLeaveRequests(@PathVariable long ManagerId){
+    public ResponseEntity<List<LeaveResponseDTO>> getAllTheLeaveRequests(@PathVariable long ManagerId) {
         return ResponseEntity.ok(leaveRequestService.getAllThePendingLeaveRequests(ManagerId));
     }
-
     @PutMapping("/approval")
     public ResponseEntity<?> updateLeaveRequestStatus(@RequestBody ActionDTO actionDTO){
       return leaveRequestService.updateLeaveRequestStatus(actionDTO);
