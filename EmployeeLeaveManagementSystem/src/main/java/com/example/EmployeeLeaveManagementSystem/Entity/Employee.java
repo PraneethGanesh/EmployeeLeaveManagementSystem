@@ -30,17 +30,6 @@ public class Employee {
     public void setRole(Role role) {
         this.role = role;
     }
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
->>>>>>> 505ae4c94498d17f5388664bf22304ba078868ef
 
     public long getEmployeeId() {
         return employeeId;
