@@ -13,15 +13,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-/**
- * Daily Scheduler for Employee Leave Status Management
- *
- * This scheduler runs daily at midnight to:
- * 1. Mark employees ON_LEAVE for approved leaves starting today
- * 2. Mark employees back to ACTIVE for approved leaves that have ended
- */
 @Component
 public class LeaveStatusScheduler {
 
@@ -30,89 +26,82 @@ public class LeaveStatusScheduler {
     private final LeaveRequestRepo leaveRequestRepo;
     private final EmployeeRepo employeeRepo;
 
-    public LeaveStatusScheduler(LeaveRequestRepo leaveRequestRepo, EmployeeRepo employeeRepo) {
+    public LeaveStatusScheduler(LeaveRequestRepo leaveRequestRepo,
+                                EmployeeRepo employeeRepo) {
         this.leaveRequestRepo = leaveRequestRepo;
         this.employeeRepo = employeeRepo;
     }
 
     /**
-     * Runs daily at midnight (00:00:00)
-     * Cron expression: second minute hour day-of-month month day-of-week
+     * Runs every day at midnight UTC
      */
-    @Scheduled(cron = "0 0 0 * * *",  zone = "UTC")
+    @Scheduled(cron = "0 0 0 * * *", zone = "UTC")
     @Transactional
     public void updateEmployeeLeaveStatus() {
-        log.info("=== Starting Daily Leave Status Scheduler ===");
-        LocalDate today = LocalDate.now();
 
-        int onLeaveCount = markEmployeesOnLeave(today);
-        int activeCount = markEmployeesBackToActive(today);
+        log.info("=== Starting Timezone-Aware Leave Scheduler ===");
 
-        log.info("=== Scheduler Completed ===");
-        log.info("Employees marked ON_LEAVE: {}", onLeaveCount);
-        log.info("Employees marked ACTIVE: {}", activeCount);
-    }
+        List<LeaveRequest> leaves =
+                leaveRequestRepo.findApprovedLeavesWithEmployee(LeaveStatus.APPROVED);
 
-    /**
-     * Step 1: Mark employees ON_LEAVE for approved leaves starting today
-     */
-    private int markEmployeesOnLeave(LocalDate today) {
-        log.info("Step 1: Checking for approved leaves starting on {}", today);
+        Map<Long, List<LeaveRequest>> employeeLeavesMap = leaves.stream()
+                .collect(Collectors.groupingBy(lr -> lr.getEmployee().getEmployeeId()));
 
-        List<LeaveRequest> leavesStartingToday = leaveRequestRepo.findByStartDateAndStatus(today, LeaveStatus.APPROVED);
+        int onLeaveCount = 0;
+        int activeCount = 0;
 
-        int count = 0;
-        for (LeaveRequest leave : leavesStartingToday) {
-            Employee employee = leave.getEmployee();
+        for (Map.Entry<Long, List<LeaveRequest>> entry : employeeLeavesMap.entrySet()) {
 
-            // Only update if employee is currently ACTIVE
-            if (employee.getStatus() == Status.ACTIVE) {
+            Employee employee = entry.getValue().get(0).getEmployee();
+
+            ZoneId zone = ZoneId.of(
+                    employee.getTimezone() != null ? employee.getTimezone() : "UTC"
+            );
+
+            LocalDate today = LocalDate.now(zone);
+
+            boolean isOnLeaveToday = entry.getValue().stream().anyMatch(leave ->
+                    !today.isBefore(leave.getStartDate()) &&
+                            !today.isAfter(leave.getEndDate())
+            );
+
+            // ✅ CASE 1: Should be ON_LEAVE
+            if (isOnLeaveToday && employee.getStatus() != Status.ON_LEAVE) {
+
                 employee.setStatus(Status.ON_LEAVE);
                 employeeRepo.save(employee);
-                count++;
-                log.info("Employee {} ({}) marked ON_LEAVE - Leave ID: {}",
-                        employee.getEmployeeId(), employee.getName(), leave.getId());
+                onLeaveCount++;
+
+                log.info("Employee {} ({}) marked ON_LEAVE | TZ: {}",
+                        employee.getEmployeeId(),
+                        employee.getName(),
+                        zone);
             }
-        }
 
-        log.info("Marked {} employees as ON_LEAVE", count);
-        return count;
-    }
+            // ✅ CASE 2: Should be ACTIVE
+            if (!isOnLeaveToday && employee.getStatus() == Status.ON_LEAVE) {
 
-    /**
-     * Step 2: Mark employees back to ACTIVE for approved leaves that have ended
-     */
-    private int markEmployeesBackToActive(LocalDate today) {
-        log.info("Step 2: Checking for approved leaves that ended before {}", today);
-
-        // Find all approved leaves where endDate < today
-        List<LeaveRequest> endedLeaves =
-                leaveRequestRepo.findApprovedLeavesEndedBefore(today, LeaveStatus.APPROVED);
-
-        int count = 0;
-        for (LeaveRequest leave : endedLeaves) {
-            Employee employee = leave.getEmployee();
-
-            // Only update if employee is currently ON_LEAVE
-            if (employee.getStatus() == Status.ON_LEAVE) {
                 employee.setStatus(Status.ACTIVE);
                 employeeRepo.save(employee);
-                count++;
-                log.info("Employee {} ({}) marked ACTIVE - Leave ID: {} ended on {}",
-                        employee.getEmployeeId(), employee.getName(), leave.getId(), leave.getEndDate());
+                activeCount++;
+
+                log.info("Employee {} ({}) marked ACTIVE | TZ: {}",
+                        employee.getEmployeeId(),
+                        employee.getName(),
+                        zone);
             }
         }
 
-        log.info("Marked {} employees as ACTIVE", count);
-        return count;
+        log.info("=== Scheduler Completed ===");
+        log.info("ON_LEAVE updated: {}", onLeaveCount);
+        log.info("ACTIVE updated: {}", activeCount);
     }
 
     /**
-     * Manual trigger for testing purposes
-     * Can be called via an API endpoint if needed
+     * Manual trigger (for testing)
      */
-    public void runSchedulerManually() {
-        log.info("Manual scheduler trigger initiated");
+    public void runManually() {
+        log.info("Manual scheduler trigger started...");
         updateEmployeeLeaveStatus();
     }
 }

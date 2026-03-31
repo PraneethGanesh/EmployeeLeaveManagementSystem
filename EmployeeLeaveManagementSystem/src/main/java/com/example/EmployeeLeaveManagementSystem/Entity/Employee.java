@@ -23,6 +23,18 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    /** IANA timezone id, e.g. "Asia/Kolkata", "America/New_York". Defaults to UTC. */
+    @Column(nullable = false)
+    private String timezone = "UTC";
+
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
+
     public Role getRole() {
         return role;
     }
@@ -80,10 +92,12 @@ public class Employee {
     }
 
     @PrePersist
-    public void initialSetup(){
-        this.status=Status.ACTIVE;
-        this.joined_at=LocalDate.now();
-        this.role=Role.EMPLOYEE;
+    public void initialSetup() {
+        this.status = Status.ACTIVE;
+        this.joined_at = LocalDate.now();
+        this.role = Role.EMPLOYEE;
+        if (this.timezone == null || this.timezone.isBlank()) {
+            this.timezone = "UTC";
+        }
     }
-
 }
