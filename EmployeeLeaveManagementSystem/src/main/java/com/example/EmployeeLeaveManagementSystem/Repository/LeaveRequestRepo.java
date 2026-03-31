@@ -27,7 +27,7 @@ public interface LeaveRequestRepo extends JpaRepository<LeaveRequest, Long> {
     long checkDuplicate(@Param("employeeId") long employeeId,
                         @Param("startDate") LocalDate startDate,
                         @Param("endDate") LocalDate endDate,
-                        @Param("status") String status);
+                        @Param("status") LeaveStatus status);
 
     // Fix overlapping leave query (was commented in your code)
     @Query("SELECT COUNT(l) FROM LeaveRequest l WHERE l.employee.employeeId = :employeeId " +

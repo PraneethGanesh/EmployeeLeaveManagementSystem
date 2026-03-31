@@ -19,16 +19,16 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private Status status;
     private LocalDate joined_at;
-    @Column(nullable = false)
-    private String role = "EMPLOYEE";
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
+//    @Column(nullable = false)
+//    private String role = "EMPLOYEE";
+//
+//    public String getRole() {
+//        return role;
+//    }
+//
+//    public void setRole(String role) {
+//        this.role = role;
+//    }
 
     public long getEmployeeId() {
         return employeeId;
