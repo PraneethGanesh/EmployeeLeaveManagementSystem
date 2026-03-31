@@ -6,6 +6,15 @@ public class EmployeeDTO {
     private String name;
     private String email;
     private String dept;
+    private String timezone;
+
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
 
     public String getName() {
         return name;

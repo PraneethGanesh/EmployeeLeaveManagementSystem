@@ -36,6 +36,7 @@ public class EmployeeService {
         if(employeeDTO.getName()!=null) employee.setName(employeeDTO.getName());
         if(employeeDTO.getEmail()!=null) employee.setEmail(employeeDTO.getEmail());
         if(employeeDTO.getDept()!=null) employee.setDept(employeeDTO.getDept());
+        if(employeeDTO.getTimezone()!=null) employee.setTimezone(employeeDTO.getTimezone());
         return employeeRepo.save(employee);
     }
 
@@ -46,6 +47,7 @@ public class EmployeeService {
         if(employee.getName()!=null) updateEmployee.setName(employee.getName());
         if(employee.getEmail()!=null) updateEmployee.setEmail(employee.getEmail());
         if(employee.getDept()!=null) updateEmployee.setDept(employee.getDept());
+        if(employee.getTimezone()!=null) updateEmployee.setTimezone(employee.getTimezone());
         return employeeRepo.save(updateEmployee);
     }
 
