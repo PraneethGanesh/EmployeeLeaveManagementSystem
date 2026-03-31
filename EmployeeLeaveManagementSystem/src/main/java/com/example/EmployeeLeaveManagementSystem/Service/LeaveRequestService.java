@@ -48,9 +48,10 @@ public class LeaveRequestService {
             return ResponseEntity.badRequest()
                     .body(Map.of("error", "Only active employees can apply for leave"));
         }
+
         leaveRequest.setEmployee(employee);
         //Checking if the start date is before today
-        LocalDate today = LocalDate.now(ZoneOffset.UTC);
+        LocalDate today = LocalDate.now();
         if (requestDTO.getStartDate().isBefore(today)) {
             throw new InvalidStartDateException("Start date cannot be before current date");
         }
@@ -119,6 +120,12 @@ public class LeaveRequestService {
     }
 
     public ResponseEntity<?> updateLeaveRequestStatus(ActionDTO actionDTO){
+        if (actionDTO.getManagerEmail() == null) {
+            return ResponseEntity.badRequest().body("Manager email is required");
+        }
+        if (actionDTO.getAction() == null) {
+            return ResponseEntity.badRequest().body("Action is required");
+        }
         String email=actionDTO.getManagerEmail();
         log.info("Updating leave request status for id: {}", actionDTO.getLeaveRequestId());
         Optional<Employee> employee=employeeRepo.findByEmail(email);
@@ -128,15 +135,22 @@ public class LeaveRequestService {
         var leaveRequest=leaveRequestRepo.findById(actionDTO.getLeaveRequestId()).orElseThrow(
                 ()-> new LeaveRequestNotFoundException("LeaveRequest with id:"+actionDTO.getLeaveRequestId()+" not found")
         );
-         if(actionDTO.getManagerEmail()==null){
-             return ResponseEntity.badRequest().body("Manager Email is required..");
-         }
+
+        if (leaveRequest.getStatus() != LeaveStatus.PENDING) {
+            return ResponseEntity.badRequest()
+                    .body("Only PENDING requests can be approved or rejected. Current status: "
+                            + leaveRequest.getStatus());
+        }
+
          leaveRequest.setManager(actionDTO.getManagerEmail());
          if(actionDTO.getAction().equalsIgnoreCase("approved")){
              leaveRequest.setStatus(LeaveStatus.APPROVED);
          }
-         if(actionDTO.getAction().equalsIgnoreCase("rejected")){
+         else if(actionDTO.getAction().equalsIgnoreCase("rejected")){
              leaveRequest.setStatus(LeaveStatus.REJECTED);
+         }
+         else{
+             return ResponseEntity.badRequest().body("Invalid action,Use APPROVED or REJECTED");
          }
 
          if(actionDTO.getRemarks()!=null){
