@@ -20,14 +20,19 @@ public class LeaveRequestController {
         this.leaveRequestService = leaveRequestService;
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<?> addLeaveRequest(@PathVariable long id,@RequestBody LeaveRequestDTO dto){
-        return leaveRequestService.createRequest(id,dto);
+    @GetMapping
+    public ResponseEntity<List<LeaveResponseDTO>> getAllLeaveRequest(){
+        return ResponseEntity.ok(leaveRequestService.getAllTheLeaveRequest());
     }
 
-    @GetMapping("/pending")
-    public ResponseEntity<List<LeaveResponseDTO>> getAllTheLeaveRequests(){
-        return ResponseEntity.ok(leaveRequestService.getAllThePendingLeaveRequests());
+    @PostMapping("/{EmployeeId}")
+    public ResponseEntity<?> addLeaveRequest(@PathVariable long EmployeeId,@RequestBody LeaveRequestDTO dto){
+        return leaveRequestService.createRequest(EmployeeId,dto);
+    }
+
+    @GetMapping("/pending/{ManagerId}")
+    public ResponseEntity<List<LeaveResponseDTO>> getAllTheLeaveRequests(@PathVariable long ManagerId){
+        return ResponseEntity.ok(leaveRequestService.getAllThePendingLeaveRequests(ManagerId));
     }
 
     @PutMapping("/approval")

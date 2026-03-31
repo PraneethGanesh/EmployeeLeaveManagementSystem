@@ -41,8 +41,8 @@ public class EmployeeController {
     }
 
     //should be done by manager
-    @PutMapping("/{id}/inactive")
-    public ResponseEntity<String> inactivateEmployee(@PathVariable long id){
-        return employeeService.inactivateUser(id);
+    @PutMapping("/{ManagerId}/inactive")
+    public ResponseEntity<String> inactivateEmployee(@PathVariable long ManagerId,@RequestParam long employeeId){
+        return employeeService.inactivateUser(ManagerId,employeeId);
     }
 }

@@ -22,22 +22,29 @@ public interface LeaveRequestRepo extends JpaRepository<LeaveRequest, Long> {
     List<LeaveRequest> findByStartDateAndStatus(LocalDate startDate, LeaveStatus status);
 
     // Fix the checkDuplicate query (fix parameter names)
-    @Query("SELECT COUNT(l) FROM LeaveRequest l WHERE l.employee.employeeId = :employeeId " +
-            "AND l.startDate = :startDate AND l.endDate = :endDate AND l.status = :status")
+    @Query(value = "SELECT COUNT(*) " +
+            "FROM leave_request l " +
+            "WHERE l.employee_id = :employeeId " +
+            "AND l.start_date = :startDate " +
+            "AND l.end_date = :endDate " +
+            "AND l.status = :status",nativeQuery = true)
     long checkDuplicate(@Param("employeeId") long employeeId,
                         @Param("startDate") LocalDate startDate,
                         @Param("endDate") LocalDate endDate,
                         @Param("status") LeaveStatus status);
 
     // Fix overlapping leave query (was commented in your code)
-    @Query("SELECT COUNT(l) FROM LeaveRequest l WHERE l.employee.employeeId = :employeeId " +
-            "AND l.status = 'APPROVED' " +
-            "AND ((l.startDate BETWEEN :startDate AND :endDate) " +
-            "OR (l.endDate BETWEEN :startDate AND :endDate) " +
-            "OR (:startDate BETWEEN l.startDate AND l.endDate))")
-    long countOverlappingApprovedLeave(@Param("employeeId") long employeeId,
-                                       @Param("startDate") LocalDate startDate,
-                                       @Param("endDate") LocalDate endDate);
+    @Query(value = "select COUNT(*) " +
+            "from leave_request l " +
+            "where l.employee_id=:employeeId " +
+            "AND l.status IN ('APPROVED','PENDING') " +
+            "AND l.start_date <= :endDate " +
+            "AND l.end_date >= :startDate",nativeQuery = true)
+    long countOverlappingLeave(
+            @Param("employeeId") long employeeId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
 
     // Add missing methods
     List<LeaveRequest> findByEmployeeOrderByStartDateDesc(Employee employee);

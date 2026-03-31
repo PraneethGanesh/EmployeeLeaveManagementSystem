@@ -1,5 +1,6 @@
 package com.example.EmployeeLeaveManagementSystem.Entity;
 
+import com.example.EmployeeLeaveManagementSystem.Enum.Role;
 import com.example.EmployeeLeaveManagementSystem.Enum.Status;
 import jakarta.persistence.*;
 
@@ -19,6 +20,7 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private Status status;
     private LocalDate joined_at;
+<<<<<<< HEAD
 //    @Column(nullable = false)
 //    private String role = "EMPLOYEE";
 //
@@ -29,6 +31,18 @@ public class Employee {
 //    public void setRole(String role) {
 //        this.role = role;
 //    }
+=======
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+>>>>>>> 505ae4c94498d17f5388664bf22304ba078868ef
 
     public long getEmployeeId() {
         return employeeId;
@@ -82,6 +96,7 @@ public class Employee {
     public void initialSetup(){
         this.status=Status.ACTIVE;
         this.joined_at=LocalDate.now();
+        this.role=Role.EMPLOYEE;
     }
 
 }

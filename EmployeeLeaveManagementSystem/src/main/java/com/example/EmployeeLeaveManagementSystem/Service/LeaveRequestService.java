@@ -7,6 +7,7 @@ import com.example.EmployeeLeaveManagementSystem.Entity.Employee;
 import com.example.EmployeeLeaveManagementSystem.Entity.LeaveRequest;
 import com.example.EmployeeLeaveManagementSystem.Enum.LeaveStatus;
 import com.example.EmployeeLeaveManagementSystem.Enum.LeaveType;
+import com.example.EmployeeLeaveManagementSystem.Enum.Role;
 import com.example.EmployeeLeaveManagementSystem.Enum.Status;
 import com.example.EmployeeLeaveManagementSystem.Exception.*;
 import com.example.EmployeeLeaveManagementSystem.Repository.EmployeeRepo;
@@ -18,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +34,15 @@ public class LeaveRequestService {
     public LeaveRequestService(LeaveRequestRepo leaveRequestRepo, EmployeeRepo employeeRepo) {
         this.leaveRequestRepo = leaveRequestRepo;
         this.employeeRepo = employeeRepo;
+    }
+
+    public List<LeaveResponseDTO> getAllTheLeaveRequest(){
+        List<LeaveRequest> requestList=leaveRequestRepo.findAll();
+        List<LeaveResponseDTO> dtos=new ArrayList<>();
+        for(LeaveRequest request:requestList){
+           dtos.add(convertToDTO(request));
+        }
+        return dtos;
     }
 
 
@@ -85,8 +94,8 @@ public class LeaveRequestService {
             throw new DuplicateRequestException("Duplicate leave request");
         }
 
-        //checking if there is any overlapping approved leave request of that employee
-        long count= leaveRequestRepo.countOverlappingApprovedLeave(
+        //checking if there is any overlapping leave request of that employee
+        long count= leaveRequestRepo.countOverlappingLeave(
                 id,
                 requestDTO.getStartDate(),
                 requestDTO.getEndDate()
@@ -110,7 +119,13 @@ public class LeaveRequestService {
     }
 
     //Only for manager
-    public List<LeaveResponseDTO> getAllThePendingLeaveRequests(){
+    public List<LeaveResponseDTO> getAllThePendingLeaveRequests(long ManagerId){
+        var manager=employeeRepo.findById(ManagerId).orElseThrow(
+                ()->new EmployeeNotFound("Manager with id: "+ManagerId+" is not found")
+        );
+        if(manager.getRole()== Role.EMPLOYEE){
+            throw new InvalidManagerException("Only manager can see the pending leave requests");
+        }
         List<LeaveRequest> requestList=leaveRequestRepo.findByStatus(LeaveStatus.PENDING);
         List<LeaveResponseDTO> responseDTOS=new ArrayList<>();
         for(LeaveRequest request:requestList){
@@ -120,18 +135,19 @@ public class LeaveRequestService {
     }
 
     public ResponseEntity<?> updateLeaveRequestStatus(ActionDTO actionDTO){
-        if (actionDTO.getManagerEmail() == null) {
-            return ResponseEntity.badRequest().body("Manager email is required");
-        }
+
         if (actionDTO.getAction() == null) {
             return ResponseEntity.badRequest().body("Action is required");
         }
-        String email=actionDTO.getManagerEmail();
+        long managerId=actionDTO.getManagerId();
         log.info("Updating leave request status for id: {}", actionDTO.getLeaveRequestId());
-        Optional<Employee> employee=employeeRepo.findByEmail(email);
-        if(employee.isPresent()){
-           return ResponseEntity.badRequest().body("Employee cannot update leave request status");
+        Employee manager=employeeRepo.findById(managerId).orElseThrow(
+                ()->new EmployeeNotFound("Manager with id: "+managerId+" is not found")
+        );
+        if(manager.getRole()== Role.EMPLOYEE){
+            throw new InvalidManagerException("Only manager can update leave requests");
         }
+
         var leaveRequest=leaveRequestRepo.findById(actionDTO.getLeaveRequestId()).orElseThrow(
                 ()-> new LeaveRequestNotFoundException("LeaveRequest with id:"+actionDTO.getLeaveRequestId()+" not found")
         );
@@ -142,7 +158,7 @@ public class LeaveRequestService {
                             + leaveRequest.getStatus());
         }
 
-         leaveRequest.setManager(actionDTO.getManagerEmail());
+         leaveRequest.setManager(manager.getName());
          if(actionDTO.getAction().equalsIgnoreCase("approved")){
              leaveRequest.setStatus(LeaveStatus.APPROVED);
          }
@@ -179,7 +195,7 @@ public class LeaveRequestService {
 
     private LeaveResponseDTO convertToDTO(LeaveRequest request){
         var responseDTO=new LeaveResponseDTO();
-        responseDTO.setLeaveId(request.getId());
+        responseDTO.setLeaveRequestId(request.getId());
         responseDTO.setEmployeeId(request.getEmployee().getEmployeeId());
         responseDTO.setLeaveType(request.getLeaveType());
         responseDTO.setStartDate(request.getStartDate());
