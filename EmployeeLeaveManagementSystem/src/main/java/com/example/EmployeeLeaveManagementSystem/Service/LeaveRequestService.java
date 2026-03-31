@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,9 @@ public class LeaveRequestService {
 
         leaveRequest.setEmployee(employee);
         //Checking if the start date is before today
-        LocalDate today = LocalDate.now();
+        String timezone= requestDTO.getTimezone();
+        ZoneId zoneId=ZoneId.of(timezone);
+        LocalDate today = LocalDate.now(zoneId);
         if (requestDTO.getStartDate().isBefore(today)) {
             throw new InvalidStartDateException("Start date cannot be before current date");
         }
