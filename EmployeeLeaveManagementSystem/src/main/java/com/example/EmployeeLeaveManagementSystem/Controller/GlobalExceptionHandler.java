@@ -71,5 +71,13 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(InvalidManagerException.class)
+    public ResponseEntity<Map<String,Object>> handelLeaveInvalidManagerException(InvalidManagerException exception, WebRequest request){
+        return new ResponseEntity<>(
+                buildError(HttpStatus.BAD_REQUEST, exception.getMessage(), request),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
 
 }

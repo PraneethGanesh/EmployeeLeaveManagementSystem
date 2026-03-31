@@ -3,6 +3,7 @@ package com.example.EmployeeLeaveManagementSystem.Service;
 import com.example.EmployeeLeaveManagementSystem.Controller.EmployeeController;
 import com.example.EmployeeLeaveManagementSystem.DTO.EmployeeDTO;
 import com.example.EmployeeLeaveManagementSystem.Entity.Employee;
+import com.example.EmployeeLeaveManagementSystem.Enum.Role;
 import com.example.EmployeeLeaveManagementSystem.Enum.Status;
 import com.example.EmployeeLeaveManagementSystem.Exception.EmployeeNotFound;
 import com.example.EmployeeLeaveManagementSystem.Repository.EmployeeRepo;
@@ -55,16 +56,23 @@ public class EmployeeService {
         employeeRepo.delete(employee);
     }
 
-    public ResponseEntity<String> inactivateUser(long id){
-        var employee=employeeRepo.findById(id).orElseThrow(
-                ()->new EmployeeNotFound("Employee with id:"+id+" not found")
+    public ResponseEntity<String> inactivateUser(long ManagerId, long employeeId){
+        var manager=employeeRepo.findById(ManagerId).orElseThrow(
+                ()->new EmployeeNotFound("Manager with id:"+ManagerId+" not found")
         );
+        var employee=employeeRepo.findById(employeeId).orElseThrow(
+                ()->new EmployeeNotFound("Employee with id:"+employeeId+" not found")
+        );
+        if(manager.getRole()== Role.EMPLOYEE){
+           return ResponseEntity.badRequest().body("Only manager can inactivate the user");
+        }
+
         if(employee.getStatus()== Status.INACTIVE){
             return ResponseEntity.badRequest()
-                    .body("Status of the employee with id: "+id+" is already set to inactive");
+                    .body("Status of the employee with id: "+employeeId+" is already set to inactive");
         }
         employee.setStatus(Status.INACTIVE);
         employeeRepo.save(employee);
-        return ResponseEntity.ok("Status of the employee with id: "+id+" is set to inactive");
+        return ResponseEntity.ok("Status of the employee with id: "+employeeId+" is set to inactive");
     }
 }

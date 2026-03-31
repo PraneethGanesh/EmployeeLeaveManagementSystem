@@ -3,8 +3,8 @@ package com.example.EmployeeLeaveManagementSystem.DTO;
 
 public class ActionDTO {
     private long leaveRequestId;
-    private String managerEmail;
-    private String Action;
+    private long managerId;
+    private String action;
     private String remarks;
 
     public long getLeaveRequestId() {
@@ -15,20 +15,20 @@ public class ActionDTO {
         this.leaveRequestId = leaveRequestId;
     }
 
-    public String getManagerEmail() {
-        return managerEmail;
+    public long getManagerId() {
+        return managerId;
     }
 
-    public void setManagerEmail(String managerEmail) {
-        this.managerEmail = managerEmail;
+    public void setManagerId(long managerId) {
+        this.managerId = managerId;
     }
 
     public String getAction() {
-        return Action;
+        return action;
     }
 
     public void setAction(String action) {
-        Action = action;
+        this.action = action;
     }
 
     public String getRemarks() {

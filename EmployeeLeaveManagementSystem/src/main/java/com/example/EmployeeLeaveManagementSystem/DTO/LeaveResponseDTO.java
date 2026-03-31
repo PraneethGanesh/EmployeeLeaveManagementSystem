@@ -6,7 +6,7 @@ import com.example.EmployeeLeaveManagementSystem.Enum.LeaveType;
 import java.time.LocalDate;
 
 public class LeaveResponseDTO {
-    private long leaveId;
+    private long leaveRequestId;
     private long employeeId;
     private LeaveType leaveType;
     private LocalDate startDate;
@@ -14,12 +14,12 @@ public class LeaveResponseDTO {
     private String reason;
     private LeaveStatus status;
 
-    public long getLeaveId() {
-        return leaveId;
+    public long getLeaveRequestId() {
+        return leaveRequestId;
     }
 
-    public void setLeaveId(long leaveId) {
-        this.leaveId = leaveId;
+    public void setLeaveRequestId(long leaveRequestId) {
+        this.leaveRequestId = leaveRequestId;
     }
 
     public long getEmployeeId() {
