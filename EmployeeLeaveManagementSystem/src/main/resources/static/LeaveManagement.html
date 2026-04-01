@@ -7,119 +7,48 @@
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
     <style>
         :root {
-            --ink: #1a1a2e;
-            --ink2: #2d2d44;
-            --surface: #ffffff;
-            --bg: #f4f3ef;
-            --accent: #185FA5;
-            --accent-lt: #e6f1fb;
-            --teal: #0F6E56;
-            --teal-lt: #e1f5ee;
-            --amber: #854F0B;
-            --amber-lt: #faeeda;
-            --red: #A32D2D;
-            --red-lt: #fcebeb;
-            --green: #3B6D11;
-            --green-lt: #eaf3de;
-            --border: rgba(26,26,46,0.09);
-            --border-md: rgba(26,26,46,0.16);
-            --font: 'Sora', sans-serif;
-            --mono: 'JetBrains Mono', monospace;
-            --r: 10px;
-            --r-lg: 16px;
-            --shadow: 0 2px 8px rgba(26,26,46,0.08);
-            --shadow-lg: 0 8px 32px rgba(26,26,46,0.12);
+            --ink: #1a1a2e; --ink2: #2d2d44; --surface: #ffffff; --bg: #f4f3ef;
+            --accent: #185FA5; --accent-lt: #e6f1fb; --teal: #0F6E56; --teal-lt: #e1f5ee;
+            --amber: #854F0B; --amber-lt: #faeeda; --red: #A32D2D; --red-lt: #fcebeb;
+            --green: #3B6D11; --green-lt: #eaf3de;
+            --border: rgba(26,26,46,0.09); --border-md: rgba(26,26,46,0.16);
+            --font: 'Sora', sans-serif; --mono: 'JetBrains Mono', monospace;
+            --r: 10px; --r-lg: 16px;
+            --shadow: 0 2px 8px rgba(26,26,46,0.08); --shadow-lg: 0 8px 32px rgba(26,26,46,0.12);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: var(--font); background: var(--bg); color: var(--ink); font-size: 14px; line-height: 1.6; min-height: 100vh; }
-
-        /* ── LAYOUT ── */
         .app { display: grid; grid-template-columns: 230px 1fr; min-height: 100vh; }
-
-        /* ── SIDEBAR ── */
-        .sidebar {
-            background: var(--ink);
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            padding: 0;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            overflow-y: auto;
-        }
+        .sidebar { background: var(--ink); color: #fff; display: flex; flex-direction: column; padding: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
         .logo-area { padding: 28px 22px 22px; border-bottom: 1px solid rgba(255,255,255,0.07); }
         .logo-mark { font-size: 20px; font-weight: 600; letter-spacing: -0.5px; color: #fff; }
         .logo-mark span { color: #5B9BD5; }
         .logo-sub { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 2px; font-weight: 300; letter-spacing: 0.3px; }
-
         .nav-section { padding: 18px 14px 8px; }
         .nav-label { font-size: 10px; font-weight: 600; letter-spacing: 1.2px; color: rgba(255,255,255,0.25); text-transform: uppercase; padding: 0 8px; margin-bottom: 6px; }
-        .nav-item {
-            display: flex; align-items: center; gap: 10px;
-            padding: 9px 12px; border-radius: var(--r);
-            cursor: pointer; font-size: 13.5px; font-weight: 400;
-            color: rgba(255,255,255,0.6); transition: all 0.15s; margin-bottom: 2px;
-        }
+        .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: var(--r); cursor: pointer; font-size: 13.5px; font-weight: 400; color: rgba(255,255,255,0.6); transition: all 0.15s; margin-bottom: 2px; }
         .nav-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
         .nav-item.active { background: rgba(91,155,213,0.18); color: #5B9BD5; font-weight: 500; }
         .nav-icon { width: 16px; height: 16px; opacity: 0.7; flex-shrink: 0; }
         .nav-item.active .nav-icon { opacity: 1; }
-
-        .tz-panel {
-            margin: auto 0 0;
-            padding: 16px 18px;
-            border-top: 1px solid rgba(255,255,255,0.07);
-            background: rgba(255,255,255,0.03);
-        }
+        .tz-panel { margin: auto 0 0; padding: 16px 18px; border-top: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.03); }
         .tz-label { font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 6px; }
-        .tz-select {
-            width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.75); border-radius: 6px; padding: 6px 8px; font-family: var(--font);
-            font-size: 12px; cursor: pointer; outline: none;
-        }
+        .tz-select { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.75); border-radius: 6px; padding: 6px 8px; font-family: var(--font); font-size: 12px; cursor: pointer; outline: none; }
         .tz-clock { font-family: var(--mono); font-size: 13px; color: #5B9BD5; margin-top: 8px; letter-spacing: 0.5px; }
-
-        /* ── MAIN ── */
         .main { display: flex; flex-direction: column; min-height: 100vh; }
-        .topbar {
-            background: var(--surface); border-bottom: 1px solid var(--border);
-            padding: 14px 32px; display: flex; align-items: center; justify-content: space-between;
-            position: sticky; top: 0; z-index: 10;
-        }
+        .topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
         .page-title { font-size: 16px; font-weight: 600; letter-spacing: -0.2px; }
         .topbar-right { display: flex; align-items: center; gap: 12px; }
-        .badge-btn {
-            display: flex; align-items: center; gap: 6px;
-            background: var(--accent-lt); color: var(--accent);
-            border: none; border-radius: 20px; padding: 6px 14px;
-            font-family: var(--font); font-size: 12.5px; font-weight: 500;
-            cursor: pointer; transition: all 0.15s;
-        }
+        .badge-btn { display: flex; align-items: center; gap: 6px; background: var(--accent-lt); color: var(--accent); border: none; border-radius: 20px; padding: 6px 14px; font-family: var(--font); font-size: 12.5px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
         .badge-btn:hover { background: var(--accent); color: #fff; }
-        .avatar {
-            width: 34px; height: 34px; border-radius: 50%;
-            background: var(--ink2); color: #fff;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 12px; font-weight: 600; cursor: pointer;
-        }
-
+        .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--ink2); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; cursor: pointer; }
         .content { padding: 28px 32px; flex: 1; }
-
-        /* ── VIEWS ── */
         .view { display: none; animation: fadeIn 0.2s ease; }
         .view.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* ── STATS ROW ── */
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
-        .stat-card {
-            background: var(--surface); border-radius: var(--r-lg); padding: 18px 20px;
-            border: 1px solid var(--border); position: relative; overflow: hidden;
-        }
-        .stat-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-        }
+        .stat-card { background: var(--surface); border-radius: var(--r-lg); padding: 18px 20px; border: 1px solid var(--border); position: relative; overflow: hidden; }
+        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
         .stat-card.blue::before { background: var(--accent); }
         .stat-card.teal::before { background: var(--teal); }
         .stat-card.amber::before { background: var(--amber); }
@@ -127,13 +56,9 @@
         .stat-label { font-size: 11px; color: var(--ink); opacity: 0.45; font-weight: 500; letter-spacing: 0.3px; text-transform: uppercase; margin-bottom: 6px; }
         .stat-value { font-size: 26px; font-weight: 600; letter-spacing: -0.5px; color: var(--ink); }
         .stat-sub { font-size: 11.5px; color: var(--teal); margin-top: 4px; font-weight: 500; }
-
-        /* ── TABLES & CARDS ── */
         .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
         .section-title { font-size: 15px; font-weight: 600; letter-spacing: -0.2px; }
-        .chip {
-            padding: 3px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 500; display: inline-flex; align-items: center; gap: 5px;
-        }
+        .chip { padding: 3px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 500; display: inline-flex; align-items: center; gap: 5px; }
         .chip.pending { background: var(--amber-lt); color: var(--amber); }
         .chip.approved { background: var(--teal-lt); color: var(--teal); }
         .chip.rejected { background: var(--red-lt); color: var(--red); }
@@ -144,37 +69,23 @@
         .chip.sick { background: var(--red-lt); color: var(--red); }
         .chip.casual { background: var(--accent-lt); color: var(--accent); }
         .chip.earned { background: var(--green-lt); color: var(--green); }
-
-        .table-wrap {
-            background: var(--surface); border-radius: var(--r-lg);
-            border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow);
-        }
+        .tz-pill { display: inline-flex; align-items: center; gap: 5px; background: #f0f4fa; border: 1px solid rgba(24,95,165,0.15); color: var(--accent); border-radius: 20px; padding: 3px 9px; font-size: 11px; font-family: var(--mono); font-weight: 500; white-space: nowrap; letter-spacing: 0.1px; }
+        .tz-pill svg { width: 10px; height: 10px; flex-shrink: 0; opacity: 0.7; }
+        .table-wrap { background: var(--surface); border-radius: var(--r-lg); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow); }
         table { width: 100%; border-collapse: collapse; }
-        thead th {
-            text-align: left; padding: 12px 16px; font-size: 11px; font-weight: 600;
-            letter-spacing: 0.6px; text-transform: uppercase; color: var(--ink); opacity: 0.4;
-            background: var(--bg); border-bottom: 1px solid var(--border);
-        }
+        thead th { text-align: left; padding: 12px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase; color: var(--ink); opacity: 0.4; background: var(--bg); border-bottom: 1px solid var(--border); }
         tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
         tbody tr:last-child { border-bottom: none; }
         tbody tr:hover { background: #fafaf6; }
         tbody td { padding: 12px 16px; font-size: 13.5px; color: var(--ink); vertical-align: middle; }
         .emp-cell { display: flex; align-items: center; gap: 10px; }
-        .emp-avatar {
-            width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 11px; font-weight: 600; color: #fff;
-        }
+        .emp-avatar { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #fff; }
         .emp-name { font-weight: 500; font-size: 13.5px; }
         .emp-email { font-size: 11.5px; color: var(--ink); opacity: 0.4; }
         .role-chip { font-size: 10.5px; font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; }
         .role-chip.manager { color: var(--accent); }
         .role-chip.employee { color: var(--ink); opacity: 0.4; }
-        .action-btn {
-            padding: 5px 12px; border-radius: 6px; border: 1px solid var(--border-md);
-            background: transparent; font-family: var(--font); font-size: 12px; cursor: pointer;
-            transition: all 0.15s; color: var(--ink); font-weight: 500;
-        }
+        .action-btn { padding: 5px 12px; border-radius: 6px; border: 1px solid var(--border-md); background: transparent; font-family: var(--font); font-size: 12px; cursor: pointer; transition: all 0.15s; color: var(--ink); font-weight: 500; }
         .action-btn:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
         .action-btn.approve { border-color: var(--teal); color: var(--teal); }
         .action-btn.approve:hover { background: var(--teal); color: #fff; }
@@ -182,100 +93,47 @@
         .action-btn.reject:hover { background: var(--red); color: #fff; }
         .action-btn.danger { border-color: var(--red); color: var(--red); }
         .action-btn.danger:hover { background: var(--red); color: #fff; }
-
-        /* ── FORMS ── */
-        .form-card {
-            background: var(--surface); border-radius: var(--r-lg); border: 1px solid var(--border);
-            padding: 28px; box-shadow: var(--shadow); max-width: 560px;
-        }
+        .form-card { background: var(--surface); border-radius: var(--r-lg); border: 1px solid var(--border); padding: 28px; box-shadow: var(--shadow); max-width: 560px; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .form-group { display: flex; flex-direction: column; gap: 6px; }
         .form-group.full { grid-column: 1/-1; }
         label { font-size: 12px; font-weight: 500; color: var(--ink); opacity: 0.6; letter-spacing: 0.2px; text-transform: uppercase; }
-        input, select, textarea {
-            padding: 10px 12px; border: 1px solid var(--border-md); border-radius: var(--r);
-            font-family: var(--font); font-size: 13.5px; color: var(--ink);
-            background: var(--surface); outline: none; transition: border-color 0.15s;
-            width: 100%;
-        }
+        input, select, textarea { padding: 10px 12px; border: 1px solid var(--border-md); border-radius: var(--r); font-family: var(--font); font-size: 13.5px; color: var(--ink); background: var(--surface); outline: none; transition: border-color 0.15s; width: 100%; }
         input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(24,95,165,0.08); }
         textarea { resize: vertical; min-height: 80px; }
-        .btn-primary {
-            background: var(--ink); color: #fff; border: none; border-radius: var(--r);
-            padding: 11px 22px; font-family: var(--font); font-size: 13.5px; font-weight: 500;
-            cursor: pointer; transition: all 0.15s; letter-spacing: -0.1px;
-        }
+        .btn-primary { background: var(--ink); color: #fff; border: none; border-radius: var(--r); padding: 11px 22px; font-family: var(--font); font-size: 13.5px; font-weight: 500; cursor: pointer; transition: all 0.15s; letter-spacing: -0.1px; }
         .btn-primary:hover { background: var(--accent); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(24,95,165,0.25); }
-        .btn-secondary {
-            background: transparent; color: var(--ink); border: 1px solid var(--border-md);
-            border-radius: var(--r); padding: 11px 22px; font-family: var(--font);
-            font-size: 13.5px; font-weight: 500; cursor: pointer; transition: all 0.15s;
-        }
+        .btn-secondary { background: transparent; color: var(--ink); border: 1px solid var(--border-md); border-radius: var(--r); padding: 11px 22px; font-family: var(--font); font-size: 13.5px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
         .btn-secondary:hover { background: var(--bg); }
         .form-actions { display: flex; gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
-
-        /* ── ALERT ── */
-        .alert {
-            padding: 12px 16px; border-radius: var(--r); font-size: 13px; font-weight: 500;
-            margin-bottom: 16px; display: none; align-items: center; gap: 8px;
-        }
+        .alert { padding: 12px 16px; border-radius: var(--r); font-size: 13px; font-weight: 500; margin-bottom: 16px; display: none; align-items: center; gap: 8px; }
         .alert.show { display: flex; }
         .alert.success { background: var(--teal-lt); color: var(--teal); border: 1px solid rgba(15,110,86,0.2); }
         .alert.error { background: var(--red-lt); color: var(--red); border: 1px solid rgba(163,45,45,0.2); }
-
-        /* ── LEAVE CALENDAR STRIP ── */
-        .leave-timeline { display: flex; gap: 4px; margin-top: 16px; flex-wrap: wrap; }
-        .day-chip {
-            padding: 4px 8px; border-radius: 5px; font-size: 11px; font-family: var(--mono);
-            background: var(--teal-lt); color: var(--teal); font-weight: 500;
-        }
-
-        /* ── MODAL ── */
-        .modal-overlay {
-            display: none; position: fixed; inset: 0; background: rgba(26,26,46,0.45);
-            z-index: 100; align-items: center; justify-content: center;
-        }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(26,26,46,0.45); z-index: 100; align-items: center; justify-content: center; }
         .modal-overlay.open { display: flex; }
-        .modal {
-            background: var(--surface); border-radius: var(--r-lg); padding: 28px;
-            width: 440px; max-width: 95vw; box-shadow: var(--shadow-lg);
-            animation: slideUp 0.2s ease;
-        }
+        .modal { background: var(--surface); border-radius: var(--r-lg); padding: 28px; width: 440px; max-width: 95vw; box-shadow: var(--shadow-lg); animation: slideUp 0.2s ease; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 18px; }
         .modal-actions { display: flex; gap: 8px; margin-top: 18px; }
-
-        /* ── EMPTY STATE ── */
-        .empty-state {
-            text-align: center; padding: 48px 24px; color: var(--ink); opacity: 0.35;
-        }
+        .empty-state { text-align: center; padding: 48px 24px; color: var(--ink); opacity: 0.35; }
         .empty-state .icon { font-size: 36px; margin-bottom: 10px; }
         .empty-state p { font-size: 13px; }
-
-        /* ── SCROLLBAR ── */
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border-md); border-radius: 99px; }
-
-        /* ── TZ BANNER ── */
-        .tz-banner {
-            background: var(--accent-lt); border-bottom: 1px solid rgba(24,95,165,0.15);
-            padding: 8px 32px; font-size: 12px; color: var(--accent); font-weight: 500;
-            display: flex; align-items: center; gap: 8px;
-        }
+        .tz-banner { background: var(--accent-lt); border-bottom: 1px solid rgba(24,95,165,0.15); padding: 8px 32px; font-size: 12px; color: var(--accent); font-weight: 500; display: flex; align-items: center; gap: 8px; }
+        .tz-hint { font-size: 11px; color: var(--accent); opacity: 0.8; margin-top: 2px; font-family: var(--mono); }
     </style>
 </head>
 <body>
 
 <div class="app">
-
-    <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="logo-area">
             <div class="logo-mark">Leave<span>Flow</span></div>
             <div class="logo-sub">Leave Management System</div>
         </div>
-
         <div class="nav-section">
             <div class="nav-label">Overview</div>
             <div class="nav-item active" onclick="switchView('dashboard', this)">
@@ -283,7 +141,6 @@
                 Dashboard
             </div>
         </div>
-
         <div class="nav-section">
             <div class="nav-label">Employees</div>
             <div class="nav-item" onclick="switchView('employees', this)">
@@ -295,7 +152,6 @@
                 Add Employee
             </div>
         </div>
-
         <div class="nav-section">
             <div class="nav-label">Leave</div>
             <div class="nav-item" onclick="switchView('all-leaves', this)">
@@ -311,7 +167,6 @@
                 Pending Approvals
             </div>
         </div>
-
         <div class="nav-section">
             <div class="nav-label">System</div>
             <div class="nav-item" onclick="switchView('scheduler', this)">
@@ -319,7 +174,6 @@
                 Scheduler
             </div>
         </div>
-
         <div class="tz-panel">
             <div class="tz-label">🌐 Timezone</div>
             <select class="tz-select" id="tzSelect" onchange="updateClock()">
@@ -327,23 +181,22 @@
                 <option value="America/New_York">🇺🇸 New York (EST)</option>
                 <option value="America/Los_Angeles">🇺🇸 Los Angeles (PST)</option>
                 <option value="Europe/London">🇬🇧 London (GMT)</option>
-                <option value="Europe/Paris">🇫🇷 Paris (CET)</option>
+                <option value="Europe/Paris">🇪🇺 Paris (CET)</option>
                 <option value="Asia/Tokyo">🇯🇵 Tokyo (JST)</option>
                 <option value="Asia/Dubai">🇦🇪 Dubai (GST)</option>
                 <option value="Australia/Sydney">🇦🇺 Sydney (AEDT)</option>
                 <option value="America/Sao_Paulo">🇧🇷 São Paulo (BRT)</option>
                 <option value="Asia/Singapore">🇸🇬 Singapore (SGT)</option>
+                <option value="UTC">🌍 UTC</option>
             </select>
             <div class="tz-clock" id="tzClock">--:--:--</div>
         </div>
     </aside>
 
-    <!-- MAIN -->
     <main class="main">
         <div class="tz-banner" id="tzBanner">
-            📅 Dates shown in selected timezone — employees across timezones can apply leave based on their local date
+            🗓️ Dates shown in selected timezone — employees across timezones can apply leave based on their local date
         </div>
-
         <div class="topbar">
             <div class="page-title" id="pageTitle">Dashboard</div>
             <div class="topbar-right">
@@ -353,12 +206,10 @@
         </div>
 
         <div class="content">
-
-            <!-- ALERTS -->
             <div class="alert success" id="alertSuccess">✓ <span id="alertMsg">Success!</span></div>
-            <div class="alert error" id="alertError">✕ <span id="alertErrMsg">Error!</span></div>
+            <div class="alert error"   id="alertError">⚠ <span id="alertErrMsg">Error!</span></div>
 
-            <!-- ═══════════ DASHBOARD ═══════════ -->
+            <!-- DASHBOARD -->
             <div class="view active" id="view-dashboard">
                 <div class="stats-grid">
                     <div class="stat-card blue">
@@ -382,22 +233,12 @@
                         <div class="stat-sub">Awaiting approval</div>
                     </div>
                 </div>
-
                 <div class="section-head" style="margin-top:8px;">
                     <div class="section-title">Recent Leave Requests</div>
                 </div>
                 <div class="table-wrap">
                     <table>
-                        <thead>
-                        <tr>
-                            <th>Employee</th>
-                            <th>Type</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Status</th>
-                            <th>Local Date</th>
-                        </tr>
-                        </thead>
+                        <thead><tr><th>Employee</th><th>Type</th><th>Start Date</th><th>End Date</th><th>Status</th><th>Local Date</th></tr></thead>
                         <tbody id="dash-leaves-body">
                         <tr><td colspan="6"><div class="empty-state"><div class="icon">📋</div><p>Loading leave data...</p></div></td></tr>
                         </tbody>
@@ -405,32 +246,23 @@
                 </div>
             </div>
 
-            <!-- ═══════════ EMPLOYEES ═══════════ -->
+            <!-- ALL EMPLOYEES -->
             <div class="view" id="view-employees">
                 <div class="section-head">
                     <div class="section-title">All Employees</div>
-                    <button class="badge-btn" onclick="loadEmployees()">↻ Refresh</button>
+                    <button class="badge-btn" onclick="loadEmployees()">↺ Refresh</button>
                 </div>
                 <div class="table-wrap">
                     <table>
-                        <thead>
-                        <tr>
-                            <th>Employee</th>
-                            <th>Department</th>
-                            <th>Role</th>
-                            <th>Status</th>
-                            <th>Joined</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
+                        <thead><tr><th>Employee</th><th>Department</th><th>Timezone</th><th>Role</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead>
                         <tbody id="employees-body">
-                        <tr><td colspan="6"><div class="empty-state"><div class="icon">👥</div><p>Loading employees...</p></div></td></tr>
+                        <tr><td colspan="7"><div class="empty-state"><div class="icon">👥</div><p>Loading employees...</p></div></td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- ═══════════ ADD EMPLOYEE ═══════════ -->
+            <!-- ADD EMPLOYEE -->
             <div class="view" id="view-add-employee">
                 <div class="section-title" style="margin-bottom:20px;">Add New Employee</div>
                 <div class="form-card">
@@ -443,9 +275,36 @@
                             <label>Email</label>
                             <input type="email" id="emp-email" placeholder="rahul@company.com"/>
                         </div>
-                        <div class="form-group full">
+                        <div class="form-group">
                             <label>Department</label>
                             <input type="text" id="emp-dept" placeholder="e.g. Engineering, HR, Sales"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Timezone</label>
+                            <select id="emp-timezone">
+                                <option value="UTC">UTC</option>
+                                <option value="Asia/Kolkata">Asia/Kolkata (IST +5:30)</option>
+                                <option value="America/New_York">America/New_York (EST -5)</option>
+                                <option value="America/Los_Angeles">America/Los_Angeles (PST -8)</option>
+                                <option value="America/Chicago">America/Chicago (CST -6)</option>
+                                <option value="America/Denver">America/Denver (MST -7)</option>
+                                <option value="America/Sao_Paulo">America/Sao_Paulo (BRT -3)</option>
+                                <option value="Europe/London">Europe/London (GMT +0)</option>
+                                <option value="Europe/Paris">Europe/Paris (CET +1)</option>
+                                <option value="Europe/Berlin">Europe/Berlin (CET +1)</option>
+                                <option value="Europe/Moscow">Europe/Moscow (MSK +3)</option>
+                                <option value="Africa/Nairobi">Africa/Nairobi (EAT +3)</option>
+                                <option value="Asia/Dubai">Asia/Dubai (GST +4)</option>
+                                <option value="Asia/Karachi">Asia/Karachi (PKT +5)</option>
+                                <option value="Asia/Dhaka">Asia/Dhaka (BST +6)</option>
+                                <option value="Asia/Bangkok">Asia/Bangkok (ICT +7)</option>
+                                <option value="Asia/Singapore">Asia/Singapore (SGT +8)</option>
+                                <option value="Asia/Shanghai">Asia/Shanghai (CST +8)</option>
+                                <option value="Asia/Tokyo">Asia/Tokyo (JST +9)</option>
+                                <option value="Australia/Sydney">Australia/Sydney (AEDT +11)</option>
+                                <option value="Pacific/Auckland">Pacific/Auckland (NZDT +13)</option>
+                            </select>
+                            <div class="tz-hint" id="emp-tz-hint">UTC +0:00</div>
                         </div>
                     </div>
                     <div class="form-actions">
@@ -455,25 +314,15 @@
                 </div>
             </div>
 
-            <!-- ═══════════ ALL LEAVES ═══════════ -->
+            <!-- ALL LEAVES -->
             <div class="view" id="view-all-leaves">
                 <div class="section-head">
                     <div class="section-title">All Leave Requests</div>
-                    <button class="badge-btn" onclick="loadAllLeaves()">↻ Refresh</button>
+                    <button class="badge-btn" onclick="loadAllLeaves()">↺ Refresh</button>
                 </div>
                 <div class="table-wrap">
                     <table>
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Employee ID</th>
-                            <th>Type</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Status</th>
-                            <th>Reason</th>
-                        </tr>
-                        </thead>
+                        <thead><tr><th>#</th><th>Employee ID</th><th>Type</th><th>Start Date</th><th>End Date</th><th>Status</th><th>Reason</th></tr></thead>
                         <tbody id="all-leaves-body">
                         <tr><td colspan="7"><div class="empty-state"><div class="icon">📋</div><p>Loading requests...</p></div></td></tr>
                         </tbody>
@@ -481,7 +330,7 @@
                 </div>
             </div>
 
-            <!-- ═══════════ APPLY LEAVE ═══════════ -->
+            <!-- APPLY LEAVE -->
             <div class="view" id="view-apply-leave">
                 <div class="section-title" style="margin-bottom:20px;">Apply for Leave</div>
                 <div class="form-card">
@@ -493,9 +342,9 @@
                         <div class="form-group">
                             <label>Leave Type</label>
                             <select id="leave-type">
-                                <option value="SICK">🤒 Sick Leave</option>
-                                <option value="CASUAL">🏖 Casual Leave</option>
-                                <option value="EARNED">⭐ Earned Leave</option>
+                                <option value="SICK">Sick Leave</option>
+                                <option value="CASUAL">Casual Leave</option>
+                                <option value="EARNED">Earned Leave</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -518,7 +367,7 @@
                 </div>
             </div>
 
-            <!-- ═══════════ PENDING APPROVALS ═══════════ -->
+            <!-- PENDING APPROVALS -->
             <div class="view" id="view-pending-approvals">
                 <div class="section-head">
                     <div class="section-title">Pending Approvals</div>
@@ -530,17 +379,7 @@
                 </div>
                 <div class="table-wrap">
                     <table>
-                        <thead>
-                        <tr>
-                            <th>Request ID</th>
-                            <th>Employee ID</th>
-                            <th>Type</th>
-                            <th>Start</th>
-                            <th>End</th>
-                            <th>Reason</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
+                        <thead><tr><th>Request ID</th><th>Employee ID</th><th>Type</th><th>Start</th><th>End</th><th>Reason</th><th>Actions</th></tr></thead>
                         <tbody id="pending-body">
                         <tr><td colspan="7"><div class="empty-state"><div class="icon">⏳</div><p>Enter a Manager ID to load pending approvals</p></div></td></tr>
                         </tbody>
@@ -548,7 +387,7 @@
                 </div>
             </div>
 
-            <!-- ═══════════ SCHEDULER ═══════════ -->
+            <!-- SCHEDULER -->
             <div class="view" id="view-scheduler">
                 <div class="section-title" style="margin-bottom:20px;">Scheduler Control</div>
                 <div class="form-card" style="max-width:680px;">
@@ -564,25 +403,21 @@
                             <div style="font-size:12px;opacity:0.5;margin-top:4px;" id="sched-local-tz">—</div>
                         </div>
                     </div>
-
                     <div style="background:var(--amber-lt);border-radius:var(--r);padding:14px 16px;margin-bottom:20px;border-left:3px solid var(--amber);">
-                        <div style="font-size:12.5px;font-weight:600;color:var(--amber);margin-bottom:4px;">⚠ Timezone Note for Global Teams</div>
-                        <div style="font-size:12.5px;color:var(--amber-dk);line-height:1.7;">
-                            The scheduler runs at UTC midnight. Employees in timezones ahead of UTC (e.g. IST +5:30, JST +9) will see their leave status update <strong>before</strong> their workday begins, which is correct. Teams in timezones behind UTC (e.g. PST -8) may see the update partway through their previous day. Consider adding a <code style="font-family:var(--mono);background:rgba(133,79,11,0.1);padding:1px 5px;border-radius:4px;">zone</code> parameter per-employee if your team spans many timezones.
+                        <div style="font-size:12.5px;font-weight:600;color:var(--amber);margin-bottom:4px;">Timezone Note for Global Teams</div>
+                        <div style="font-size:12.5px;color:var(--amber);line-height:1.7;">
+                            The scheduler runs at UTC midnight. Employees in timezones ahead of UTC (e.g. IST +5:30, JST +9) will see their leave status update <strong>before</strong> their workday starts.
                         </div>
                     </div>
-
                     <div style="font-size:13px;opacity:0.6;line-height:1.8;margin-bottom:20px;">
                         The scheduler performs two tasks each run:<br/>
                         <strong>1.</strong> Marks employees <span class="chip on_leave" style="font-size:11px;">ON_LEAVE</span> for approved leaves starting today<br/>
                         <strong>2.</strong> Marks employees back to <span class="chip active" style="font-size:11px;">ACTIVE</span> for leaves that have ended
                     </div>
-
-                    <button class="btn-primary" onclick="runScheduler()" style="background:var(--teal);">▶ &nbsp;Trigger Scheduler Now</button>
+                    <button class="btn-primary" onclick="runScheduler()" style="background:var(--teal);">Trigger Scheduler Now</button>
                 </div>
             </div>
-
-        </div><!-- /content -->
+        </div>
     </main>
 </div>
 
@@ -623,21 +458,17 @@
 <script>
     const API = 'http://localhost:8080';
 
-    // ── Timezone clock ──
     function updateClock() {
         const tz = document.getElementById('tzSelect').value;
         try {
             const now = new Date();
             const formatted = now.toLocaleTimeString('en-US', { timeZone: tz, hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
             document.getElementById('tzClock').textContent = formatted;
-            // update scheduler hint
             const localTime = now.toLocaleTimeString('en-US', { timeZone: tz, hour12: true });
             document.getElementById('sched-local-time').textContent = localTime;
             document.getElementById('sched-local-tz').textContent = tz;
-            // update apply leave hint
-            const localDate = now.toLocaleDateString('en-CA', { timeZone: tz }); // YYYY-MM-DD
+            const localDate = now.toLocaleDateString('en-CA', { timeZone: tz });
             document.getElementById('local-start-hint').textContent = '(local: ' + localDate + ')';
-            // set min date in apply form
             const start = document.getElementById('leave-start');
             if (!start.value) start.value = localDate;
             const end = document.getElementById('leave-end');
@@ -647,10 +478,20 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // ── Helpers ──
-    function localDateForTz(tz) {
-        return new Date().toLocaleDateString('en-CA', { timeZone: tz });
+    document.getElementById('emp-timezone').addEventListener('change', function() {
+        updateEmpTzHint(this.value);
+    });
+    function updateEmpTzHint(tz) {
+        try {
+            const now = new Date();
+            const offset = now.toLocaleTimeString('en-US', { timeZone: tz, timeZoneName: 'short' }).split(' ').pop();
+            const localTime = now.toLocaleTimeString('en-US', { timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: false });
+            document.getElementById('emp-tz-hint').textContent = offset + ' · local time ' + localTime;
+        } catch(e) {
+            document.getElementById('emp-tz-hint').textContent = '';
+        }
     }
+    updateEmpTzHint('UTC');
 
     function showSuccess(msg) {
         document.getElementById('alertMsg').textContent = msg;
@@ -664,7 +505,6 @@
         el.classList.add('show');
         setTimeout(() => el.classList.remove('show'), 5000);
     }
-
     function avatarColor(i) {
         const colors = ['#185FA5','#0F6E56','#854F0B','#A32D2D','#533AB7','#1D9E75','#D85A30'];
         return colors[i % colors.length];
@@ -677,135 +517,102 @@
         if (!d) return '—';
         return new Date(d).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
     }
+    function tzPill(tz) {
+        if (!tz) tz = 'UTC';
+        let short = tz;
+        try {
+            short = new Date().toLocaleTimeString('en-US', { timeZone: tz, timeZoneName: 'short' }).split(' ').pop();
+        } catch(e) {}
+        return `<span class="tz-pill"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 1.5a5.5 5.5 0 110 11 5.5 5.5 0 010-11zM7.25 4v4.31l2.72 2.72-.97.97-3-3A.75.75 0 016 8.5V4h1.25z"/></svg>${tz}<span style="opacity:0.55;font-size:10px;">${short}</span></span>`;
+    }
 
-    // ── Navigation ──
-    const viewTitles = {
-        'dashboard': 'Dashboard',
-        'employees': 'All Employees',
-        'add-employee': 'Add Employee',
-        'all-leaves': 'All Leave Requests',
-        'apply-leave': 'Apply for Leave',
-        'pending-approvals': 'Pending Approvals',
-        'scheduler': 'Scheduler'
-    };
+    const viewTitles = { 'dashboard':'Dashboard', 'employees':'All Employees', 'add-employee':'Add Employee', 'all-leaves':'All Leave Requests', 'apply-leave':'Apply for Leave', 'pending-approvals':'Pending Approvals', 'scheduler':'Scheduler' };
     function switchView(id, el) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.getElementById('view-' + id).classList.add('active');
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         if (el) el.classList.add('active');
         document.getElementById('pageTitle').textContent = viewTitles[id] || id;
-        // auto-load data
-        if (id === 'dashboard') loadDashboard();
-        if (id === 'employees') loadEmployees();
+        if (id === 'dashboard')  loadDashboard();
+        if (id === 'employees')  loadEmployees();
         if (id === 'all-leaves') loadAllLeaves();
     }
 
-    // ── API Calls ──
+    // ══════════════════════════════════════════════════════
+    // FIX 1: apiFetch now handles both JSON and plain-text
+    // responses safely, without throwing a parse error.
+    // ══════════════════════════════════════════════════════
     async function apiFetch(path, opts = {}) {
         try {
-            const res = await fetch(API + path, {
-                headers: { 'Content-Type': 'application/json' },
-                ...opts
-            });
+            const res = await fetch(API + path, { headers: { 'Content-Type': 'application/json' }, ...opts });
             if (!res.ok) {
                 const err = await res.json().catch(() => ({ message: 'Request failed' }));
                 throw new Error(err.message || err.error || 'Request failed');
             }
-            return res.json();
-        } catch (e) {
-            throw e;
-        }
+            const contentType = res.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return res.json();
+            } else {
+                return res.text();
+            }
+        } catch (e) { throw e; }
     }
 
-    // ── DASHBOARD ──
     async function loadDashboard() {
         try {
-            const [employees, leaves] = await Promise.all([
-                apiFetch('/employee'),
-                apiFetch('/leave_requests')
-            ]);
-
-            const total = employees.length;
-            const active = employees.filter(e => e.status === 'ACTIVE').length;
+            const [employees, leaves] = await Promise.all([ apiFetch('/employee'), apiFetch('/leave_requests') ]);
+            const total   = employees.length;
+            const active  = employees.filter(e => e.status === 'ACTIVE').length;
             const onLeave = employees.filter(e => e.status === 'ON_LEAVE').length;
             const pending = leaves.filter(l => l.status === 'PENDING').length;
-
-            document.getElementById('stat-total').textContent = total;
-            document.getElementById('stat-active').textContent = active;
+            document.getElementById('stat-total').textContent    = total;
+            document.getElementById('stat-active').textContent   = active;
             document.getElementById('stat-on-leave').textContent = onLeave;
-            document.getElementById('stat-pending').textContent = pending;
+            document.getElementById('stat-pending').textContent  = pending;
             document.getElementById('stat-active-sub').textContent = (total - onLeave) + ' available today';
-
             const tz = document.getElementById('tzSelect').value;
             const tbody = document.getElementById('dash-leaves-body');
             const recent = leaves.slice(-10).reverse();
-            if (recent.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="icon">📋</div><p>No leave requests yet</p></div></td></tr>';
-                return;
-            }
+            if (recent.length === 0) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="icon">📋</div><p>No leave requests yet</p></div></td></tr>'; return; }
             tbody.innerHTML = recent.map(l => {
                 const localStart = l.startDate ? new Date(l.startDate).toLocaleDateString('en-GB', { timeZone: tz, day:'2-digit', month:'short' }) : '—';
-                return `<tr>
-        <td>${l.employeeId}</td>
-        <td><span class="chip ${(l.leaveType||'').toLowerCase()}">${l.leaveType||'—'}</span></td>
-        <td>${formatDate(l.startDate)}</td>
-        <td>${formatDate(l.endDate)}</td>
-        <td><span class="chip ${(l.status||'').toLowerCase()}">${l.status||'—'}</span></td>
-        <td style="font-family:var(--mono);font-size:12px;color:var(--accent);">${localStart}</td>
-      </tr>`;
+                return `<tr><td>${l.employeeId}</td><td><span class="chip ${(l.leaveType||'').toLowerCase()}">${l.leaveType||'—'}</span></td><td>${formatDate(l.startDate)}</td><td>${formatDate(l.endDate)}</td><td><span class="chip ${(l.status||'').toLowerCase()}">${l.status||'—'}</span></td><td style="font-family:var(--mono);font-size:12px;color:var(--accent);">${localStart}</td></tr>`;
             }).join('');
-        } catch(e) {
-            showError('Could not load dashboard: ' + e.message);
-        }
+        } catch(e) { showError('Could not load dashboard: ' + e.message); }
     }
 
-    // ── EMPLOYEES ──
     async function loadEmployees() {
         try {
             const employees = await apiFetch('/employee');
             const tbody = document.getElementById('employees-body');
-            if (employees.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="icon">👥</div><p>No employees found</p></div></td></tr>';
-                return;
-            }
+            if (employees.length === 0) { tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="icon">👥</div><p>No employees found</p></div></td></tr>'; return; }
             tbody.innerHTML = employees.map((e, i) => `
       <tr>
-        <td>
-          <div class="emp-cell">
-            <div class="emp-avatar" style="background:${avatarColor(i)}">${initials(e.name)}</div>
-            <div>
-              <div class="emp-name">${e.name||'—'}</div>
-              <div class="emp-email">${e.email||'—'}</div>
-            </div>
-          </div>
-        </td>
+        <td><div class="emp-cell"><div class="emp-avatar" style="background:${avatarColor(i)}">${initials(e.name)}</div><div><div class="emp-name">${e.name||'—'}</div><div class="emp-email">${e.email||'—'}</div></div></div></td>
         <td>${e.dept||'—'}</td>
+        <td>${tzPill(e.timezone || 'UTC')}</td>
         <td><span class="role-chip ${(e.role||'').toLowerCase()}">${e.role||'—'}</span></td>
         <td><span class="chip ${(e.status||'').toLowerCase()}">${e.status||'—'}</span></td>
         <td style="font-size:12.5px;opacity:0.55;">${formatDate(e.joined_at)}</td>
-        <td>
-          <div style="display:flex;gap:6px;">
-            <button class="action-btn danger" onclick="openDeleteModal(${e.employeeId})">Delete</button>
-          </div>
-        </td>
-      </tr>
-    `).join('');
-        } catch(e) {
-            showError('Could not load employees: ' + e.message);
-        }
+        <td><div style="display:flex;gap:6px;"><button class="action-btn danger" onclick="openDeleteModal(${e.employeeId})">Delete</button></div></td>
+      </tr>`).join('');
+        } catch(e) { showError('Could not load employees: ' + e.message); }
     }
 
     async function addEmployee() {
-        const name = document.getElementById('emp-name').value.trim();
-        const email = document.getElementById('emp-email').value.trim();
-        const dept = document.getElementById('emp-dept').value.trim();
+        const name     = document.getElementById('emp-name').value.trim();
+        const email    = document.getElementById('emp-email').value.trim();
+        const dept     = document.getElementById('emp-dept').value.trim();
+        const timezone = document.getElementById('emp-timezone').value;
         if (!name || !email || !dept) { showError('Please fill in all fields'); return; }
         try {
-            await apiFetch('/employee', { method: 'POST', body: JSON.stringify({ name, email, dept }) });
+            await apiFetch('/employee', { method: 'POST', body: JSON.stringify({ name, email, dept, timezone }) });
             showSuccess('Employee created successfully!');
-            document.getElementById('emp-name').value = '';
+            document.getElementById('emp-name').value  = '';
             document.getElementById('emp-email').value = '';
-            document.getElementById('emp-dept').value = '';
+            document.getElementById('emp-dept').value  = '';
+            document.getElementById('emp-timezone').value = 'UTC';
+            updateEmpTzHint('UTC');
             switchView('employees', null);
         } catch(e) { showError('Failed to create employee: ' + e.message); }
     }
@@ -824,15 +631,11 @@
         } catch(e) { showError('Delete failed: ' + e.message); }
     }
 
-    // ── ALL LEAVES ──
     async function loadAllLeaves() {
         try {
             const leaves = await apiFetch('/leave_requests');
-            const tbody = document.getElementById('all-leaves-body');
-            if (leaves.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="icon">📋</div><p>No leave requests</p></div></td></tr>';
-                return;
-            }
+            const tbody  = document.getElementById('all-leaves-body');
+            if (leaves.length === 0) { tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="icon">📋</div><p>No leave requests</p></div></td></tr>'; return; }
             tbody.innerHTML = leaves.map(l => `
       <tr>
         <td style="font-family:var(--mono);font-size:12px;">#${l.leaveRequestId}</td>
@@ -842,41 +645,32 @@
         <td>${formatDate(l.endDate)}</td>
         <td><span class="chip ${(l.status||'').toLowerCase()}">${l.status||'—'}</span></td>
         <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:0.6;">${l.reason||'—'}</td>
-      </tr>
-    `).join('');
+      </tr>`).join('');
         } catch(e) { showError('Could not load leaves: ' + e.message); }
     }
 
-    // ── APPLY LEAVE ──
     async function applyLeave() {
-        const empId = document.getElementById('leave-emp-id').value;
+        const empId     = document.getElementById('leave-emp-id').value;
         const leaveType = document.getElementById('leave-type').value;
         const startDate = document.getElementById('leave-start').value;
-        const endDate = document.getElementById('leave-end').value;
-        const reason = document.getElementById('leave-reason').value.trim();
+        const endDate   = document.getElementById('leave-end').value;
+        const reason    = document.getElementById('leave-reason').value.trim();
         if (!empId || !startDate || !endDate) { showError('Please fill in all required fields'); return; }
         try {
             const timezone = document.getElementById('tzSelect').value;
-            await apiFetch('/leave_requests/' + empId, {
-                method: 'POST',
-                body: JSON.stringify({ leaveType, startDate, endDate, reason, timezone })
-            });
+            await apiFetch('/leave_requests/' + empId, { method: 'POST', body: JSON.stringify({ leaveType, startDate, endDate, reason, timezone }) });
             showSuccess('Leave request submitted successfully!');
             document.getElementById('leave-reason').value = '';
         } catch(e) { showError('Failed to submit: ' + e.message); }
     }
 
-    // ── PENDING APPROVALS ──
     async function loadPendingLeaves() {
         const managerId = document.getElementById('pending-manager-id').value;
         if (!managerId) { showError('Please enter a Manager ID'); return; }
         try {
             const leaves = await apiFetch('/leave_requests/pending/' + managerId);
-            const tbody = document.getElementById('pending-body');
-            if (leaves.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="icon">✅</div><p>No pending leave requests</p></div></td></tr>';
-                return;
-            }
+            const tbody  = document.getElementById('pending-body');
+            if (leaves.length === 0) { tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="icon">✅</div><p>No pending leave requests</p></div></td></tr>'; return; }
             tbody.innerHTML = leaves.map(l => `
       <tr>
         <td style="font-family:var(--mono);font-size:12px;">#${l.leaveRequestId}</td>
@@ -885,24 +679,21 @@
         <td>${formatDate(l.startDate)}</td>
         <td>${formatDate(l.endDate)}</td>
         <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;opacity:0.6;">${l.reason||'—'}</td>
-        <td>
-          <div style="display:flex;gap:6px;">
-            <button class="action-btn approve" onclick="openApproveModal(${l.leaveRequestId}, 'approved')">Approve</button>
-            <button class="action-btn reject" onclick="openApproveModal(${l.leaveRequestId}, 'rejected')">Reject</button>
-          </div>
-        </td>
-      </tr>
-    `).join('');
+        <td><div style="display:flex;gap:6px;">
+          <button class="action-btn approve" onclick="openApproveModal(${l.leaveRequestId}, 'approved')">Approve</button>
+          <button class="action-btn reject"  onclick="openApproveModal(${l.leaveRequestId}, 'rejected')">Reject</button>
+        </div></td>
+      </tr>`).join('');
         } catch(e) { showError('Could not load pending leaves: ' + e.message); }
     }
 
     function openApproveModal(leaveId, action) {
-        document.getElementById('modal-leave-id').value = leaveId;
+        document.getElementById('modal-leave-id').value    = leaveId;
         document.getElementById('modal-action-type').value = action;
         const isApprove = action === 'approved';
         document.getElementById('modal-action-title').textContent = (isApprove ? 'Approve' : 'Reject') + ' Leave Request #' + leaveId;
         const btn = document.getElementById('modal-submit-btn');
-        btn.textContent = isApprove ? 'Approve' : 'Reject';
+        btn.textContent      = isApprove ? 'Approve' : 'Reject';
         btn.style.background = isApprove ? 'var(--teal)' : 'var(--red)';
         document.getElementById('modal-remarks').value = '';
         document.getElementById('approveModal').classList.add('open');
@@ -911,30 +702,34 @@
 
     async function submitApproval() {
         const leaveRequestId = +document.getElementById('modal-leave-id').value;
-        const managerId = +document.getElementById('modal-manager-id').value;
-        const action = document.getElementById('modal-action-type').value;
-        const remarks = document.getElementById('modal-remarks').value.trim();
+        const managerId      = +document.getElementById('modal-manager-id').value;
+        const action         = document.getElementById('modal-action-type').value;
+        const remarks        = document.getElementById('modal-remarks').value.trim();
         if (!managerId) { showError('Please enter your Manager ID'); return; }
         try {
-            await apiFetch('/leave_requests/approval', {
-                method: 'PUT',
-                body: JSON.stringify({ leaveRequestId, managerId, action, remarks })
-            });
+            await apiFetch('/leave_requests/approval', { method: 'PUT', body: JSON.stringify({ leaveRequestId, managerId, action, remarks }) });
             closeModal();
             showSuccess('Leave request ' + action + ' successfully!');
             loadPendingLeaves();
         } catch(e) { showError('Action failed: ' + e.message); }
     }
 
-    // ── SCHEDULER ──
+    // ══════════════════════════════════════════════════════
+    // FIX 2: runScheduler now handles string OR object
+    // response — works whether backend returns plain text
+    // or JSON like { "message": "..." }
+    // ══════════════════════════════════════════════════════
     async function runScheduler() {
         try {
-            await apiFetch('/scheduler/run', { method: 'POST' });
-            showSuccess('Scheduler executed successfully! Employee statuses updated.');
+            const res = await apiFetch('/scheduler/run', { method: 'POST' });
+            if (typeof res === 'string') {
+                showSuccess(res);
+            } else {
+                showSuccess(res.message || 'Scheduler executed successfully!');
+            }
         } catch(e) { showError('Scheduler failed: ' + e.message); }
     }
 
-    // ── INIT ──
     loadDashboard();
 </script>
 </body>

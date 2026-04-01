@@ -1,17 +1,21 @@
 package com.example.EmployeeLeaveManagementSystem.Controller;
 
 import com.example.EmployeeLeaveManagementSystem.Scheduler.LeaveStatusScheduler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
- * Controller for scheduler operations
+ * Controller for Scheduler Operations
  */
 @RestController
 @RequestMapping("/scheduler")
 public class SchedulerController {
+
+    private static final Logger log = LoggerFactory.getLogger(SchedulerController.class);
 
     private final LeaveStatusScheduler leaveStatusScheduler;
 
@@ -20,12 +24,27 @@ public class SchedulerController {
     }
 
     /**
-     * Manual trigger for the leave status scheduler
-     * Useful for testing or immediate updates
+     * Manual trigger for leave scheduler
      */
     @PostMapping("/run")
-    public ResponseEntity<String> runScheduler() {
-        leaveStatusScheduler.runSchedulerManually();
-        return ResponseEntity.ok("Scheduler executed successfully");
+    public ResponseEntity<?> runScheduler() {
+        try {
+            leaveStatusScheduler.runManually();
+
+            return ResponseEntity.ok().body(
+                    Map.of(
+                            "status", "success",
+                            "message", "Scheduler executed successfully"
+                    )
+            );
+
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(
+                    Map.of(
+                            "status", "error",
+                            "message", e.getMessage()
+                    )
+            );
+        }
     }
 }

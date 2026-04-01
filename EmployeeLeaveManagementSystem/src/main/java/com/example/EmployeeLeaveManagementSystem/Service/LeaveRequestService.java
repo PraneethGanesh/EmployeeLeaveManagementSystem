@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,11 @@ public class LeaveRequestService {
 
         leaveRequest.setEmployee(employee);
         //Checking if the start date is before today
-        LocalDate today = LocalDate.now();
+        String timezone= employee.getTimezone();
+        ZoneId zoneId=ZoneId.of(timezone != null && !timezone.isBlank()
+                ? timezone
+                : "UTC");
+        LocalDate today = LocalDate.now(zoneId);
         if (requestDTO.getStartDate().isBefore(today)) {
             throw new InvalidStartDateException("Start date cannot be before current date");
         }
@@ -185,7 +190,12 @@ public class LeaveRequestService {
         if(employee.getEmployeeId()!=leaveRequest.getEmployee().getEmployeeId()){
             return ResponseEntity.badRequest().body("You cannot cancel others Leave request..");
         }
-        if(leaveRequest.getStartDate().isEqual(LocalDate.now())||leaveRequest.getStartDate().isBefore(LocalDate.now())){
+        String timezone= employee.getTimezone();
+        ZoneId zoneId=ZoneId.of(timezone != null && !timezone.isBlank()
+                ? timezone
+                : "UTC");
+        LocalDate today = LocalDate.now(zoneId);
+        if(leaveRequest.getStartDate().isEqual(today)||leaveRequest.getStartDate().isBefore(today)){
             return ResponseEntity.badRequest().body("You cannot cancel leave request after the leave has started");
         }
         leaveRequest.setStatus(LeaveStatus.CANCELLED);

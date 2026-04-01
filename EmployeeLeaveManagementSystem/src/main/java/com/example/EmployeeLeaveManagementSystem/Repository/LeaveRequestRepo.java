@@ -61,7 +61,8 @@ public interface LeaveRequestRepo extends JpaRepository<LeaveRequest, Long> {
     long countDaysByEmployeeAndLeaveTypeAndYear(@Param("employee") Employee employee,
                                                 @Param("leaveType") LeaveType leaveType,
                                                 @Param("year") int year);
-    @Query("SELECT lr FROM LeaveRequest lr WHERE lr.status = :status AND lr.endDate < :today")
-    List<LeaveRequest> findApprovedLeavesEndedBefore(@Param("today") LocalDate today, @Param("status") LeaveStatus status);
+
+    @Query("SELECT lr FROM LeaveRequest lr JOIN FETCH lr.employee WHERE lr.status = :status")
+    List<LeaveRequest> findApprovedLeavesWithEmployee(LeaveStatus status);
 
 }

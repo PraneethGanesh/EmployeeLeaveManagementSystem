@@ -13,7 +13,6 @@ public class LeaveRequestDTO {
     private String reason;
 
 
-
     public LeaveType getLeaveType() {
         return leaveType;
     }
