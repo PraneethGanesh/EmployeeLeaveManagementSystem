@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service
 public class EmployeeService {
-    private static final Logger log = LoggerFactory.getLogger(EmployeeController.class);
+    private static final Logger log = LoggerFactory.getLogger(EmployeeService.class);
     private final EmployeeRepo employeeRepo;
 
     public EmployeeService(EmployeeRepo employeeRepo) {

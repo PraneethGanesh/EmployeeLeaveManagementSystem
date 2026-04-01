@@ -27,7 +27,7 @@ public interface LeaveRequestRepo extends JpaRepository<LeaveRequest, Long> {
             "WHERE l.employee_id = :employeeId " +
             "AND l.start_date = :startDate " +
             "AND l.end_date = :endDate " +
-            "AND l.status = :status",nativeQuery = true)
+            "AND l.status IN ('PENDING', 'APPROVED')",nativeQuery = true)
     long checkDuplicate(@Param("employeeId") long employeeId,
                         @Param("startDate") LocalDate startDate,
                         @Param("endDate") LocalDate endDate,

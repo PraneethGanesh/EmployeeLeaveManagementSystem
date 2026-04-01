@@ -1,6 +1,5 @@
 package com.example.EmployeeLeaveManagementSystem.DTO;
 
-import jakarta.persistence.Column;
 
 public class EmployeeDTO {
     private String name;

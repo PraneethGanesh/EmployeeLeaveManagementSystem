@@ -1,6 +1,7 @@
 package com.example.EmployeeLeaveManagementSystem.Controller;
 
 import com.example.EmployeeLeaveManagementSystem.Exception.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -78,7 +79,15 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST
         );
     }
-
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String,Object>> handleDataIntegrity(
+            DataIntegrityViolationException ex, WebRequest request) {
+        return new ResponseEntity<>(
+                buildError(HttpStatus.CONFLICT,
+                        "Cannot delete: related records exist", request),
+                HttpStatus.CONFLICT
+        );
+    }
 
 
 }

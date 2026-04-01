@@ -3,7 +3,6 @@ package com.example.EmployeeLeaveManagementSystem.Entity;
 import com.example.EmployeeLeaveManagementSystem.Enum.LeaveStatus;
 import com.example.EmployeeLeaveManagementSystem.Enum.LeaveType;
 import jakarta.persistence.*;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 
@@ -12,6 +11,7 @@ public class LeaveRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Enumerated(EnumType.STRING)
     private LeaveType leaveType;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -23,6 +23,7 @@ public class LeaveRequest {
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
+
 
     public long getId() {
         return id;
